@@ -44,4 +44,5 @@ npm run dev
 
 npm install
 npm run dev
+# for the admin login you can use anuy email or password
 #admin app opens (Vite) on http://localhost:5174 (or shown in terminal)
