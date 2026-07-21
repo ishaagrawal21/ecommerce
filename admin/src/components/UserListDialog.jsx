@@ -209,17 +209,31 @@ export default function UserListDialog({ open, onClose }) {
                       </TableCell>
                       <TableCell sx={{ py: 1.5, color: "#cbd5e1" }}>{u.email}</TableCell>
                       <TableCell sx={{ py: 1.5 }}>
-                        <Chip
-                          label="Customer"
-                          size="small"
-                          sx={{
-                            bgcolor: "rgba(16, 185, 129, 0.15)",
-                            color: "#34d399",
-                            fontWeight: 700,
-                            fontSize: "0.75rem",
-                            border: "1px solid rgba(16, 185, 129, 0.3)",
-                          }}
-                        />
+                        {u.role === "admin" ? (
+                          <Chip
+                            label="Admin"
+                            size="small"
+                            sx={{
+                              bgcolor: "rgba(99, 102, 241, 0.15)",
+                              color: "#818cf8",
+                              fontWeight: 700,
+                              fontSize: "0.75rem",
+                              border: "1px solid rgba(99, 102, 241, 0.3)",
+                            }}
+                          />
+                        ) : (
+                          <Chip
+                            label="Customer"
+                            size="small"
+                            sx={{
+                              bgcolor: "rgba(16, 185, 129, 0.15)",
+                              color: "#34d399",
+                              fontWeight: 700,
+                              fontSize: "0.75rem",
+                              border: "1px solid rgba(16, 185, 129, 0.3)",
+                            }}
+                          />
+                        )}
                       </TableCell>
                       <TableCell sx={{ py: 1.5, color: "#94a3b8", fontSize: "0.85rem" }}>
                         {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "N/A"}
