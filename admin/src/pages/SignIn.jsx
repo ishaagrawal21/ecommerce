@@ -10,14 +10,17 @@ import {
   Avatar,
   Alert,
   CircularProgress,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { Storefront as StorefrontIcon, LockOutlined as LockIcon } from "@mui/icons-material";
+import { Storefront as StorefrontIcon, LockOutlined as LockIcon, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
 
 export default function SignIn() {
   const { login } = useAuth();
   const [email, setEmail] = useState("admin@store.com");
   const [password, setPassword] = useState("admin123");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -114,11 +117,24 @@ export default function SignIn() {
 
                 <TextField
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   fullWidth
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          sx={{ color: "#94a3b8" }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                   sx={{
                     "& .MuiInputLabel-root": { color: "#94a3b8" },
                     "& .MuiOutlinedInput-root": {
