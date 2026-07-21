@@ -9,16 +9,6 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: "No token, authorization denied" });
     }
 
-    if (token === "admin-session-token" || token === "demo-admin-token") {
-      req.user = {
-        _id: "000000000000000000000000",
-        name: "Admin User",
-        email: "admin@store.com",
-        role: "admin",
-      };
-      return next();
-    }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
     const user = await User.findById(decoded.userId).select("-password");
 

@@ -13,21 +13,19 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const res = await getCurrentAdmin();
-          if (res?.user || res?.result) {
-            setUser(res.user || res.result);
+          const userData = res?.user || res?.result;
+          if (userData && userData.role === "admin") {
+            setUser(userData);
           } else {
-            // fallback mock user if auth/me not strictly implemented
-            const storedUser = localStorage.getItem("admin_user");
-            setUser(storedUser ? JSON.parse(storedUser) : { username: "Admin User", role: "admin" });
+            localStorage.removeItem("admin_token");
+            localStorage.removeItem("admin_user");
+            setUser(null);
           }
         } catch (err) {
           console.warn("Auth verify failed:", err);
-          const storedUser = localStorage.getItem("admin_user");
-          if (storedUser) {
-            setUser(JSON.parse(storedUser));
-          } else {
-            localStorage.removeItem("admin_token");
-          }
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("admin_user");
+          setUser(null);
         }
       }
       setLoading(false);
@@ -38,8 +36,12 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       const res = await adminSignIn(credentials);
-      const token = res.token || res.result?.token || "demo-admin-token";
-      const userData = res.user || res.result?.user || { username: credentials.username || "Admin", email: credentials.email || "admin@example.com" };
+      const token = res.token || res.result?.token;
+      const userData = res.user || res.result?.user;
+
+      if (!token || !userData || userData.role !== "admin") {
+        return { success: false, message: "Access denied. Admin rights required." };
+      }
 
       localStorage.setItem("admin_token", token);
       localStorage.setItem("admin_user", JSON.stringify(userData));
@@ -47,14 +49,6 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (err) {
       console.error("Login failed:", err);
-      // Fallback for easy demo if server credentials check has different schema
-      if (credentials.email && credentials.password) {
-        const demoUser = { username: credentials.email.split("@")[0], email: credentials.email };
-        localStorage.setItem("admin_token", "admin-session-token");
-        localStorage.setItem("admin_user", JSON.stringify(demoUser));
-        setUser(demoUser);
-        return { success: true };
-      }
       return { success: false, message: err?.response?.data?.message || "Invalid credentials" };
     }
   };

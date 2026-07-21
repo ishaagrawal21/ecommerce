@@ -83,6 +83,11 @@ Built with:
    ```
    *The admin app opens at: `http://localhost:5174` (or other free port shown in terminal)*
 
+#### Default Admin Credentials
+When you start the backend server, a default admin user is automatically seeded in the database. You can use the following credentials to sign in to the Admin Operations Portal:
+- **Email Address**: `admin@store.com`
+- **Password**: `admin123`
+
 ---
 
 ## API Documentation Summary
